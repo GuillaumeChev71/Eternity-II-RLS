@@ -1,7 +1,7 @@
 public class Eternity {
 
     public static int[][][] creationPlateau(){
-
+        
         int n = 3;
         int kc = 4;
         int[][][] plateau = new int[n][n][kc];
@@ -207,8 +207,30 @@ public class Eternity {
 
     public static void melangePlateau(int[][][] p){
 
- 
+        int dim = p.length;
+
+        
+        for(int i=0;i<50;i++){
+
+            int a=(int)(Math.random() * dim);
+            int b=(int)(Math.random() * dim);
+            int c=(int)(Math.random() * dim);
+            int d=(int)(Math.random() * dim);
+                    
+            echangePiece(p,a,b,c,d);
+            rotationPiece(p,a,b);
+        }
+
     }
+
+    public static void RLS(int[][][] p){
+
+
+        
+
+    }
+
+
 
  
     public static void main(String args[]) {
@@ -217,13 +239,22 @@ public class Eternity {
         affichagePlateau(plateau);
         int nbConflits = getNbConflits(plateau,plateau.length);
         System.out.println("Nombre de conflits dans le plateau : "+nbConflits);
-        //int nombreAleatoire = Min + (int)(Math.random() * ((Max - Min) + 1));
-        echangePiece(plateau,0,0,0,1);
+
+        melangePlateau(plateau);
         affichagePlateau(plateau);
+
         nbConflits = getNbConflits(plateau,plateau.length);
         System.out.println("Nombre de conflits dans le plateau : "+nbConflits);
+
+        
+        //int nbConflits = getNbConflits(plateau,plateau.length);
+        //System.out.println("Nombre de conflits dans le plateau : "+nbConflits);
+        //int nombreAleatoire = Min + (int)(Math.random() * ((Max - Min) + 1));
+        //echangePiece(plateau,0,0,0,1);
+        //affichagePlateau(plateau);
+        //nbConflits = getNbConflits(plateau,plateau.length);
+        //System.out.println("Nombre de conflits dans le plateau : "+nbConflits);
     }
 
  
-
 }
