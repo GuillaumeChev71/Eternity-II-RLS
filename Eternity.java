@@ -1,3 +1,5 @@
+
+
 public class Eternity {
 
     public static int[][][] creationPlateau(){
@@ -209,7 +211,6 @@ public class Eternity {
 
         int dim = p.length;
 
-        
         for(int i=0;i<50;i++){
 
             int a=(int)(Math.random() * dim);
@@ -261,16 +262,17 @@ public class Eternity {
             v = plateauVoisin(c);
         }
         }
-        affichagePlateau(c);
+        //affichagePlateau(c);
 
     
-
     }
 
 
 
  
     public static void main(String args[]) {
+
+         long startTime = System.currentTimeMillis();
 
         int[][][] plateau = solutionAleatoire();
         melangePlateau(plateau);
@@ -293,6 +295,10 @@ public class Eternity {
         //affichagePlateau(plateau);
         //nbConflits = getNbConflits(plateau,plateau.length);
         //System.out.println("Nombre de conflits dans le plateau : "+nbConflits);
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.out.println("Execution time : "+(elapsedTime/1000)%60+" s");
+        
     }
 
  
