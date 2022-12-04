@@ -218,15 +218,52 @@ public class Eternity {
             int d=(int)(Math.random() * dim);
                     
             echangePiece(p,a,b,c,d);
-            rotationPiece(p,a,b);
+            //rotationPiece(p,a,b); //tourne d'un quart de tour
         }
+
+    }
+
+    public static int [][][] plateauVoisin(int[][][] p){
+
+            int dim = p.length;
+
+            int a=(int)(Math.random() * dim);
+            int b=(int)(Math.random() * dim);
+            int c=(int)(Math.random() * dim);
+            int d=(int)(Math.random() * dim);
+
+            echangePiece(p,a,b,c,d);
+            //rotationPiece(p,a,b);
+
+            return p;
 
     }
 
     public static void RLS(int[][][] p){
 
+        //plateau de depart
+        int[][][] c = p;
+        int conflitsPlateau = getNbConflits(c,c.length);
+        affichagePlateau(c);
+        System.out.println(conflitsPlateau);
 
-        
+        while(getNbConflits(c,c.length)!=0){
+        //plateau voison de c
+        int[][][] v = plateauVoisin(c);
+        int conflitsPlateauV = getNbConflits(v,v.length);
+        affichagePlateau(v);
+        System.out.println(conflitsPlateauV);
+
+        if(conflitsPlateauV < conflitsPlateau){
+            c=v;
+        }
+        else{
+            v = plateauVoisin(c);
+        }
+        }
+        affichagePlateau(c);
+
+    
 
     }
 
@@ -236,15 +273,17 @@ public class Eternity {
     public static void main(String args[]) {
 
         int[][][] plateau = solutionAleatoire();
-        affichagePlateau(plateau);
-        int nbConflits = getNbConflits(plateau,plateau.length);
-        System.out.println("Nombre de conflits dans le plateau : "+nbConflits);
-
         melangePlateau(plateau);
-        affichagePlateau(plateau);
+        //affichagePlateau(plateau);
+        RLS(plateau);
+        // int nbConflits = getNbConflits(plateau,plateau.length);
+        // System.out.println("Nombre de conflits dans le plateau : "+nbConflits);
 
-        nbConflits = getNbConflits(plateau,plateau.length);
-        System.out.println("Nombre de conflits dans le plateau : "+nbConflits);
+        // melangePlateau(plateau);
+        // affichagePlateau(plateau);
+
+        // nbConflits = getNbConflits(plateau,plateau.length);
+        // System.out.println("Nombre de conflits dans le plateau : "+nbConflits);
 
         
         //int nbConflits = getNbConflits(plateau,plateau.length);
