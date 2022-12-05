@@ -1,5 +1,3 @@
-
-
 public class Eternity {
 
     public static int[][][] creationPlateau(){
@@ -100,10 +98,10 @@ public class Eternity {
 
  
 
-    public static int[][][] solutionAleatoire(){
+    public static int[][][] solutionAleatoire(int taille,int nbCouleur){
 
-        int n = 3;
-        int kc = 4;
+        int n = taille;
+        int kc = nbCouleur;
         int[][][] p = new int[n][n][kc];
         int dim = p.length;
 
@@ -219,7 +217,7 @@ public class Eternity {
             int d=(int)(Math.random() * dim);
                     
             echangePiece(p,a,b,c,d);
-            //rotationPiece(p,a,b); //tourne d'un quart de tour
+            rotationPiece(p,a,b); //tourne d'un quart de tour
         }
 
     }
@@ -234,7 +232,7 @@ public class Eternity {
             int d=(int)(Math.random() * dim);
 
             echangePiece(p,a,b,c,d);
-            //rotationPiece(p,a,b);
+            rotationPiece(p,a,b);
 
             return p;
 
@@ -246,25 +244,59 @@ public class Eternity {
         int[][][] c = p;
         int conflitsPlateau = getNbConflits(c,c.length);
         affichagePlateau(c);
-        System.out.println(conflitsPlateau);
+        //System.out.println(conflitsPlateau);
+
+        //while(true){
+        while(getNbConflits(c,c.length)!=0){
+            //plateau voison de c
+            int[][][] v = plateauVoisin(c);
+            int conflitsPlateauV = getNbConflits(v,v.length);
+            //System.out.println(" C :"+conflitsPlateau+" V: "+conflitsPlateauV+" proba :"+Math.exp((conflitsPlateau-conflitsPlateauV)/0.2));
+            //affichagePlateau(v);
+            //System.out.println(conflitsPlateauV);
+
+            if(conflitsPlateauV < conflitsPlateau){
+                 c=v;
+            }
+            else{
+                //calcul du critère de Metropolis
+                int temperature = 2;
+                //System.out.println(" C :"+conflitsPlateau+" V: "+conflitsPlateauV+" proba :"+Math.exp((conflitsPlateau-conflitsPlateauV)/0.2));
+                double metro = Math.exp((conflitsPlateau-conflitsPlateauV)/0.02);
+                //System.out.println(metro);
+                if(metro<0.007){
+                    c=v;
+                }
+            }
+        }
+        affichagePlateau(c);
+    
+    }
+
+    public static void resolveurAleatoire(int[][][] p){
+
+        //plateau de depart
+        int[][][] c = p;
+        int conflitsPlateau = getNbConflits(c,c.length);
+        affichagePlateau(c);
+        //System.out.println(conflitsPlateau);
 
         while(getNbConflits(c,c.length)!=0){
-        //plateau voison de c
-        int[][][] v = plateauVoisin(c);
-        int conflitsPlateauV = getNbConflits(v,v.length);
-        affichagePlateau(v);
-        System.out.println(conflitsPlateauV);
+            //plateau voison de c
+            int[][][] v = plateauVoisin(c);
+            int conflitsPlateauV = getNbConflits(v,v.length);
+            //affichagePlateau(v);
+            //System.out.println(conflitsPlateauV);
 
-        if(conflitsPlateauV < conflitsPlateau){
-            c=v;
+            if(conflitsPlateauV < conflitsPlateau){
+                c=v;
+            }
+            else{
+                v = plateauVoisin(c);
+            }
         }
-        else{
-            v = plateauVoisin(c);
-        }
-        }
-        //affichagePlateau(c);
 
-    
+        affichagePlateau(c);
     }
 
 
@@ -272,12 +304,13 @@ public class Eternity {
  
     public static void main(String args[]) {
 
-         long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
 
-        int[][][] plateau = solutionAleatoire();
+        int[][][] plateau = solutionAleatoire(3,4);
         melangePlateau(plateau);
         //affichagePlateau(plateau);
         RLS(plateau);
+        //resolveurAleatoire(plateau);
         // int nbConflits = getNbConflits(plateau,plateau.length);
         // System.out.println("Nombre de conflits dans le plateau : "+nbConflits);
 
