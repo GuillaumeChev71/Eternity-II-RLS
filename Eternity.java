@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Random;
 
 public class Eternity {
 
@@ -249,7 +250,7 @@ public class Eternity {
         int conflitsPlateau = getNbConflits(c,c.length);
         affichagePlateau(c);
         //System.out.println(conflitsPlateau);
-        double temperature = 0.2;
+        double temperature = 10000000;
 
         //while(true){
         while(getNbConflits(c,c.length)!=0){
@@ -268,10 +269,16 @@ public class Eternity {
                 
                 // System.out.println(" C :"+conflitsPlateau+" V: "+conflitsPlateauV+" proba :"+Math.exp((conflitsPlateau-conflitsPlateauV)/temperature));
                 double metro = Math.exp((conflitsPlateau-conflitsPlateauV)/temperature);
-                //temperature = temperature*0.999;
+                temperature = temperature*0.99999;
+
+                if(temperature<0.2){
+                    temperature = 1000;
+                }
                 //System.out.println("temperature :"+temperature);
                 //System.out.println(metro);
-                if(metro<0.2){
+                Random rand = new Random();
+                float f = rand.nextFloat();
+                if(metro<=f){
                     c=v;
                 }
             }
@@ -330,6 +337,8 @@ public class Eternity {
         long stopTimeRLS = System.currentTimeMillis();
         long elapsedTimeRLS = stopTimeRLS - startTimeRLS;
         System.out.println("Execution time : "+(elapsedTimeRLS/1000)%60+" s");
+
+
 
        //affichagePlateau(plateauM);
         
