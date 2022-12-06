@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Eternity {
 
     public static int[][][] creationPlateau(){
@@ -102,27 +104,27 @@ public class Eternity {
 
         int n = taille;
         int kc = nbCouleur;
-        int[][][] p = new int[n][n][kc];
+        int[][][] p = new int[n][n][4];
         int dim = p.length;
 
         for(int i=0;i<dim;i++){
             for(int j=0;j<dim;j++){
                 if(i==0 && j==0){ // aucune contrainte
                     for(int k=0;k<4;k++){
-                        p[i][j][k]=65 + (int)(Math.random() * ((68 - 65) + 1));
+                        p[i][j][k]=65 + (int)(Math.random() * ((64+nbCouleur - 65) + 1));
                     }
                 }
 
                 if(i==0 && j!=0 && j!=dim-1){
                     for(int k=0;k<4;k++){
-                        p[i][j][k]=65 + (int)(Math.random() * ((68 - 65) + 1));
+                        p[i][j][k]=65 + (int)(Math.random() * ((64+nbCouleur - 65) + 1));
                     }
                     p[i][j][3]=p[i][j-1][1];
                 }
 
                 if(i==0 && j==dim-1){
                     for(int k=0;k<4;k++){
-                        p[i][j][k]=65 + (int)(Math.random() * ((68 - 65) + 1));
+                        p[i][j][k]=65 + (int)(Math.random() * ((64+nbCouleur - 65) + 1));
                     }
                     p[i][j][1]=p[i][0][3];
                     p[i][j][3]=p[i][j-1][1];
@@ -130,14 +132,14 @@ public class Eternity {
 
                 if(i!=dim-1 && i!=0 && j==0){
                     for(int k=0;k<4;k++){
-                        p[i][j][k]=65 + (int)(Math.random() * ((68 - 65) + 1));
+                        p[i][j][k]=65 + (int)(Math.random() * ((64+nbCouleur - 65) + 1));
                     }
                     p[i][j][0]=p[i-1][j][2];
                 }
 
                 if(i!=0 && j!=0 && i!=dim-1 && j!=dim-1){
                     for(int k=0;k<4;k++){
-                        p[i][j][k]=65 + (int)(Math.random() * ((68 - 65) + 1));
+                        p[i][j][k]=65 + (int)(Math.random() * ((64+nbCouleur - 65) + 1));
                     }
                     p[i][j][0]=p[i-1][j][2];
                     p[i][j][3]=p[i][j-1][1];
@@ -145,7 +147,7 @@ public class Eternity {
 
                 if(i!=0 && j!=0 && j==dim-1){
                     for(int k=0;k<4;k++){
-                        p[i][j][k]=65 + (int)(Math.random() * ((68 - 65) + 1));
+                        p[i][j][k]=65 + (int)(Math.random() * ((64+nbCouleur - 65) + 1));
                     }
                     p[i][j][0]=p[i-1][j][2];
                     p[i][j][1]=p[i][0][3];
@@ -154,7 +156,7 @@ public class Eternity {
 
                 if(i==dim-1 && j==0){
                     for(int k=0;k<4;k++){
-                        p[i][j][k]=65 + (int)(Math.random() * ((68 - 65) + 1));
+                        p[i][j][k]=65 + (int)(Math.random() * ((64+nbCouleur - 65) + 1));
                     }
                     p[i][j][0]=p[i-1][j][2];
                     p[i][j][2]=p[0][j][0];
@@ -164,7 +166,7 @@ public class Eternity {
 
                     for(int k=0;k<4;k++){
 
-                        p[i][j][k]=65 + (int)(Math.random() * ((68 - 65) + 1));
+                        p[i][j][k]=65 + (int)(Math.random() * ((64+nbCouleur - 65) + 1));
 
                     }
                     p[i][j][0]=p[i-1][j][2];
@@ -205,7 +207,7 @@ public class Eternity {
     }
 
 
-    public static void melangePlateau(int[][][] p){
+    public static int [][][] melangePlateau(int[][][] p){
 
         int dim = p.length;
 
@@ -219,6 +221,8 @@ public class Eternity {
             echangePiece(p,a,b,c,d);
             rotationPiece(p,a,b); //tourne d'un quart de tour
         }
+
+        return p;
 
     }
 
@@ -245,6 +249,7 @@ public class Eternity {
         int conflitsPlateau = getNbConflits(c,c.length);
         affichagePlateau(c);
         //System.out.println(conflitsPlateau);
+        double temperature = 0.2;
 
         //while(true){
         while(getNbConflits(c,c.length)!=0){
@@ -260,11 +265,13 @@ public class Eternity {
             }
             else{
                 //calcul du critère de Metropolis
-                int temperature = 2;
-                //System.out.println(" C :"+conflitsPlateau+" V: "+conflitsPlateauV+" proba :"+Math.exp((conflitsPlateau-conflitsPlateauV)/0.2));
-                double metro = Math.exp((conflitsPlateau-conflitsPlateauV)/0.02);
+                
+                // System.out.println(" C :"+conflitsPlateau+" V: "+conflitsPlateauV+" proba :"+Math.exp((conflitsPlateau-conflitsPlateauV)/temperature));
+                double metro = Math.exp((conflitsPlateau-conflitsPlateauV)/temperature);
+                //temperature = temperature*0.999;
+                //System.out.println("temperature :"+temperature);
                 //System.out.println(metro);
-                if(metro<0.007){
+                if(metro<0.2){
                     c=v;
                 }
             }
@@ -300,17 +307,38 @@ public class Eternity {
     }
 
 
-
- 
     public static void main(String args[]) {
 
-        long startTime = System.currentTimeMillis();
 
-        int[][][] plateau = solutionAleatoire(3,4);
-        melangePlateau(plateau);
-        //affichagePlateau(plateau);
-        RLS(plateau);
-        //resolveurAleatoire(plateau);
+        Scanner myObj = new Scanner(System.in); 
+        System.out.println("Quel taille de plateau ? : ");
+
+        String taille = myObj.nextLine();
+
+        Scanner myObje = new Scanner(System.in); 
+        System.out.println("Combien de couleurs dans le plateau ? : ");
+
+        String nbCoul = myObje.nextLine();
+
+        int[][][] plateau = solutionAleatoire(Integer.parseInt(taille),Integer.parseInt(nbCoul));
+
+        int [][][] plateauMelange = melangePlateau(plateau);
+        int [][][] plateauM= plateauMelange;
+        //affichagePlateau(plateauMelange2);
+        long startTimeRLS = System.currentTimeMillis();
+        RLS(plateauMelange);
+        long stopTimeRLS = System.currentTimeMillis();
+        long elapsedTimeRLS = stopTimeRLS - startTimeRLS;
+        System.out.println("Execution time : "+(elapsedTimeRLS/1000)%60+" s");
+
+       //affichagePlateau(plateauM);
+        
+        // long startTimeAlea = System.currentTimeMillis();
+        // resolveurAleatoire(plateauM);
+        // long stopTimeAlea = System.currentTimeMillis();
+        // long elapsedTimeAlea = stopTimeAlea - startTimeAlea;
+        // System.out.println("Execution time : "+(elapsedTimeAlea/1000)%60+" s");
+
         // int nbConflits = getNbConflits(plateau,plateau.length);
         // System.out.println("Nombre de conflits dans le plateau : "+nbConflits);
 
@@ -328,9 +356,9 @@ public class Eternity {
         //affichagePlateau(plateau);
         //nbConflits = getNbConflits(plateau,plateau.length);
         //System.out.println("Nombre de conflits dans le plateau : "+nbConflits);
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
-        System.out.println("Execution time : "+(elapsedTime/1000)%60+" s");
+        // long stopTime = System.currentTimeMillis();
+        // long elapsedTime = stopTime - startTime;
+        // System.out.println("Execution time : "+(elapsedTime/1000)%60+" s");
         
     }
 
